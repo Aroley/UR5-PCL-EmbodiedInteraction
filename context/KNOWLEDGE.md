@@ -64,7 +64,7 @@ tab. To test a sensor branch in the sim, fake the value in code temporarily.
 ```
 docker-compose.yml          services above
 src/ur5e/                   the framework (importable as `ur5e`)
-scripts/                    check_connection.py  smoke_test_move.py  rtde_viewer.py
+scripts/                    check_connection.py  robot_status.py  smoke_test_move.py  rtde_viewer.py
 examples/grid_process.py    grid traversal with sensor-gated actuation
 examples/function_templates/   00_teach_workspace … 09_raw_rtde — one script per API call (see its README)
 examples-gripper/           lab gripper reference (experimental): gripper_two_poses.py, gripper_link.py
@@ -74,6 +74,8 @@ toolheads/<id>/             toolhead presets for the viewer (toolhead.json + mes
 programs/                   where URSim saves PolyScope programs (.urp) — git-ignored
 students/<name>/            the student's own scripts — git-ignored
 workspace.json              the taught workspace (see §5) — git-ignored
+workspaces/                 shared, ready-made workspaces: cart_360_real.json / cart_360_sim.json = the WHOLE lab cell
+                            as one workspace with a common home (absolute poses only; --workspace workspaces/<file>)
 docs/SETUP.md, docs/USAGE.md   human docs
 context/                    this folder
 ```
@@ -356,6 +358,8 @@ sliders. Scene format `ur5e-scene/1` (metres, degrees unless `_rad`).
 | `SafetyViolation: refusing real-arm motion ... allow_real=True` | real arm without `allow_real=True` (deliberate) |
 | `WorkspaceError: no workspace file` | run `00_teach_workspace.py` (`--demo` for a quick sim box) |
 | `WorkspaceError: taught on target 'sim' but ... 'real'` | teach again on the real setup |
+| a motion script **hangs silently** on connect, or any unclear connection failure on the real arm | run `python scripts/robot_status.py --target real` (read-only, 3 s timeouts): it reports network reachability from the container, Remote/Local, robot mode (must be RUNNING = ON + START), safety status, and whether a program is already running. A ping or a receive-only connection working does **not** mean a motion script can connect |
+| `SafetyViolation: joint target (TCP via FK) ... outside workspace box` right at the first `move_joints(ws.home_joints)` on the real arm | the `--tcp` passed is not the TCP that was active on the pendant when the workspace was taught (the box and `home` are in TCP coordinates) — pass the same TCP, or teach the workspace again with the current tool |
 | `connection refused` on port 30004 | URSim not started / not ON (an immediate *refused* = the host answered) |
 | `check_connection.py --host 192.168.1.11` **hangs**, then `Could not connect to: 192.168.1.11 at 30004` | laptop not on the robot's subnet (no `192.168.1.x` address on the Ethernet adapter) — fix the IP, verify with `ping`/`nc` outside Docker; not a Docker or code problem |
 | `Connecting (receive-only) to 0.0.0.0` / `--target real needs the robot's address` | `UR_HOST` not set — start the shell with `-e UR_HOST=192.168.1.11` or pass `--host` |
