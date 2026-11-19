@@ -83,6 +83,11 @@ robot.move_to(out)       # and back the same way
   is rejected because of the forearm or upper arm, move the path further out.
 - `move_joints` between two far-apart poses swings the whole arm — around the
   cart that often passes through it. Prefer several short `move_to` legs.
+- **No own workspace needed for absolute poses:** `workspaces/cart_360_real.json`
+  is the whole cell as one workspace, with a common home above the cart top
+  (`--workspace workspaces/cart_360_real.json`; in the simulator
+  `--workspace workspaces/cart_360_sim.json --cell cart_360`). Fractions
+  (`ws.pose`, `ws.grid`) make no sense with it — see `workspaces/README.md`.
 - For area work beside the cart, teach a workspace there
   (`00_teach_workspace.py --target real`): the box may reach from below the
   cart top to above it; `home` inside the box.

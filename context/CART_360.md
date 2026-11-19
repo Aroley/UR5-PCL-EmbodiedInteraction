@@ -119,8 +119,14 @@ with Robot(**robot_kwargs(args), profile=None) as robot:    # None = the cell pr
         robot.move_joints(ws.home_joints)
 ```
 
-- `profile=None` uses the whole cell — right for absolute poses around the
-  cart. `profile=ws` restricts the run to the taught box (still inside the
+- **Shared workspace for the whole cell:** `workspaces/cart_360_real.json` (and
+  `cart_360_sim.json` for the simulator, with `--cell cart_360`). Pass it with
+  `--workspace workspaces/cart_360_real.json`: `Workspace.load` + `profile=ws`
+  + `ws.home_joints` work as in the templates, the box is the complete cell,
+  home is a common pose above the cart top. With it use **absolute poses
+  only** — `ws.pose/grid/line` are meaningless on a 1.9 m box.
+- `profile=None` uses the whole cell too — right for absolute poses around the
+  cart when no workspace file is involved. `profile=ws` restricts the run to the taught box (still inside the
   cell): use it when all poses lie in one taught area.
 - A workspace can be taught **beside** the cart (8 corners + home there). Its
   box may reach from below the cart top to above it; `ws.pose(u, v, 0)` is

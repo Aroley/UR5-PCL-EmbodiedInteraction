@@ -232,6 +232,14 @@ version (*URSoftware 5.9.1*, which is why the simulator is pinned to 5.9.4).
 
 ### Your laptop must be on the robot's network — check this first
 
+**A script hangs or will not connect?** Ask the robot what state it is in —
+read-only, answers within seconds and names what is blocking (network, pendant
+in Local mode, arm not started, a stop):
+
+```bash
+python scripts/robot_status.py --target real
+```
+
 The robot hangs on its own wired network, **`192.168.1.x`**, with no DHCP
 server: a laptop plugged in gets no address by itself, and an address from
 another network (Wi-Fi `10.x.x.x`, or `192.168.10.x` — note the **10**) is
