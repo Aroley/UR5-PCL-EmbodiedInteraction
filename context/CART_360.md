@@ -43,7 +43,7 @@ and paste the output, or read the JSON file. What the profile contains:
 | TCP box | reach-sized (about ±0.95 m in x/y), from 50 mm above the floor up to z = 1.0 m |
 | keep-outs `cart`, `handle`, `mounting plate` | boxes: the cart from the floor to its top, the handle, the plate |
 | tool vs. keep-out | the TCP and the straight line flange → TCP stay `side_clearance` (20 mm) from a keep-out's **sides and underside**; its top surface may be touched |
-| arm vs. keep-out | upper arm, elbow, forearm, wrist 1–3, as spheres of `arm_radius` (60 mm) around their centre lines, stay clear of it on **all** sides |
+| arm vs. keep-out | upper arm, elbow, forearm, wrist 1–3 are modelled with their real radii (tubes about 38–43 mm, joint housings 45–62 mm) plus `arm_clearance` (0 mm in the lab cell): the modelled arm may come right up to the cart but not into it, on **all** sides |
 | floor | TCP 50 mm above it (the lower end of the TCP box); arm links above it |
 | ceilings | TCP 0.15 m/s, 0.5 m/s²; joints 0.5 rad/s, 0.8 rad/s²; payload 0.5 kg |
 
@@ -62,8 +62,8 @@ Consequences for planning:
   through the cart's edge → rejected. Route **out past the edge first, then
   down**; leave the same way.
 - The arm itself needs room: the forearm passes over the cart's edge when the
-  tool is beside the cart. A rejection naming a link (`the forearm would come
-  closer than 60 mm …`) is solved by moving the path further out from the
+  tool is beside the cart. A rejection naming a link (`the forearm would touch
+  the keep-out …`) is solved by moving the path further out from the
   cart or approaching from another side — not by changing the target height
   alone.
 - `move_joints` between distant poses swings the whole arm, often through the
@@ -152,7 +152,7 @@ with Robot(**robot_kwargs(args), profile=None) as robot:    # None = the cell pr
 | `is inside the keep-out 'cart'` | target in the cart, or below the top and closer than the clearance to a side | move the point out, or above the top |
 | `TCP path: the straight line … passes through the keep-out` | the leg cuts through the cart | add a waypoint above the top or outside the corner |
 | `flange path: …` / `tool (flange to TCP) …` | the flange or the tool line is the part that crosses | turn the tool towards the cart, or move further out |
-| `the forearm` / `upper arm` / `elbow` / `wrist N` `would come closer than 60 mm` | an arm link too close at some point of the move (the message gives the percentage of the way and the point) | route further out from the cart, or from another side |
+| `the forearm` / `upper arm` / `elbow` / `wrist N` `would touch the keep-out` | an arm link would hit the cart at some point of the move (the message gives the percentage of the way and the point) | route further out from the cart, or from another side |
 | `would touch the floor` | an arm link at floor level | stay higher |
 | `no joint solution at …` | the straight line leaves the reach or runs into a singularity (arm fully stretched, or wrist straight above/below the base) | shorter legs, different route, or a `move_joints` for that leg |
 | `the arm is ALREADY there` | the arm stands inside the keep-out (moved by hand) | the student freedrives it clear; no script fix |

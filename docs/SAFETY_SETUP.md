@@ -31,8 +31,9 @@ python -m ur5e.cell
 - **Above the cart top:** everything as before; the tool may touch the surface.
 - **Beside and below the cart top:** allowed, at a distance —
   the tool (the line from flange to TCP) stays **20 mm** away from the cart's
-  sides; the arm itself (upper arm, elbow, forearm, wrists) stays **60 mm**
-  away from the cart's sides and top.
+  sides; the arm itself (upper arm, elbow, forearm, wrists) is checked with
+  its real thickness and may come right up to the cart — the check stops it
+  where the arm would touch.
 - **Towards the floor:** the TCP stays 50 mm above it; the arm itself stays clear of it.
 - **The handle** on the cart's −Y side and the robot's mounting plate are
   keep-outs of their own; the space under the handle is usable.
@@ -98,7 +99,7 @@ robot.move_to(out)       # and back the same way
 |---|---|---|
 | `is inside the keep-out 'cart'` | the target is in the cart or closer than 20 mm to its side | move the point out, or above the top |
 | `TCP path: the straight line … passes through the keep-out` | the line to the target cuts through the cart | add a waypoint above the top or outside the corner |
-| `the forearm` / `upper arm` / `wrist …` `would come closer than 60 mm` | at some point of the move the arm itself is too close to the cart | move further out, or approach from another side |
+| `the forearm` / `upper arm` / `elbow` / `wrist …` `would touch the keep-out` | at some point of the move the arm itself would hit the cart | move further out, or approach from another side |
 | `would touch the floor` | a wrist or the forearm at floor level | stay higher |
 | `no joint solution at …` | the straight line leaves the arm's reach | shorter legs, or a different route |
 | `the arm is ALREADY there` | the arm stands inside the keep-out (moved by hand) | freedrive it clear, then start again |
