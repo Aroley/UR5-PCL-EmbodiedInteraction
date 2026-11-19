@@ -275,7 +275,8 @@ them with `python -m ur5e.cell`, do not quote them from memory. It has
   y ±0.345, z −0.800…−0.010 m), a handle on its −Y side just below the top, and
   the robot's mounting plate: the TCP and the line flange → TCP stay 20 mm from
   a keep-out's sides and underside (its top may be touched); the arm links
-  (upper arm, elbow, forearm, wrists as 60 mm spheres) stay clear on all sides,
+  (upper arm, elbow, forearm, wrists, modelled with their real radii; extra
+  clearance 0 mm in the lab cell) must not touch it on any side,
 - a floor (z = −0.800 m): the TCP stays 50 mm above it, arm links above it.
 
 Not checked: the tool's shape beyond the flange → TCP line, cables, objects
@@ -350,7 +351,7 @@ sliders. Scene format `ur5e-scene/1` (metres, degrees unless `_rad`).
 | `SafetyViolation: target (...) outside workspace box of profile '...'` | pose outside the box — check fractions / the taught box (`ws.describe()`) |
 | `SafetyViolation: ... is inside the keep-out 'cart'` | target in the cart body or < 20 mm from its side (below the top) — move it out or above the top |
 | `SafetyViolation: linear move, TCP path: the straight line ... passes through the keep-out` | the line cuts through the cart — add a waypoint above the top or outside the corner |
-| `SafetyViolation: ... the forearm (upper arm / wrist N) would come closer than 60 mm to the keep-out` | the arm itself gets too close to the cart on the way — move the path further out or approach from another side |
+| `SafetyViolation: ... the forearm (upper arm / elbow / wrist N) would touch the keep-out` | the arm itself would hit the cart on the way — move the path further out or approach from another side |
 | `SafetyViolation: linear move: no joint solution at ...` | the straight line leaves the reach — shorter legs / other route |
 | `SafetyViolation: profile 'cart_360' is not validated` | the lab cell is not released for the real arm yet — instructor |
 | `SafetyViolation: tcp speed X out of (0, 0.25] m/s` | speed above the ceiling; use ≤ profile max |
